@@ -104,7 +104,7 @@ def create_markdown(nomModule):
 		
 		##faire le fichier md _index.md 
 		while colonneOA_Copie != []:
-			lignes_chap = [select[i] for i in find([select[j][1] for j in range(len(select))],chap)]
+			lignes_chap = [select[i] for i in find([l[1] for l in select],chap)]
 			i_min = find([l[3] for l in lignes_chap],str(min(colonneOA_Copie)))[0]
 			nom_activite = lignes_chap[i_min][2]
 			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
