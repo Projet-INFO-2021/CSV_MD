@@ -95,22 +95,22 @@ def create_markdown(nomModule):
 
 	for chap in listeChap:
 		for y in range(len(select)):
-			if select[y][3] != '' and select[y][1] == chap: 
-				colonneOA.append(int(select[i][3]))
+			if (select[y][3] != '' and select[y][1] == chap): 
+				colonneOA.append(int(select[y][3]))
 		#print(listeChap)
 		path = os.path.join(nomModule, chap) 
 		os.mkdir(path)
 		colonneOA_Copie = colonneOA
 		
-		##faire le fdp fichier md _index.md 
+		##faire le fichier md _index.md 
 		while colonneOA_Copie != []:
 			lignes_chap = [select[i] for i in find([select[j][1] for j in range(len(select))],chap)]
 			i_min = find([l[3] for l in lignes_chap],str(min(colonneOA_Copie)))[0]
-			print(colonneOA_Copie)
 			nom_activite = lignes_chap[i_min][2]
 			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
 			os.mkdir(path)
-			del colonneOA_Copie[i_min]
+			colonneOA_Copie.remove(min(colonneOA_Copie))
+			#faire le fichier md _index.md
 
 							
 
@@ -119,15 +119,15 @@ def create_markdown(nomModule):
 
 
 
-
+module = 'CSI3_Projet_test_1'
 readers=CreerTableaux()
 #affiche_module(1)
 
 
-select = choix_selection(choix_module('CSI3_Projet_test_2'))
+select = choix_selection(choix_module(module))
 
 
 #affiche_chapitre(1)
 writer.close()
 
-create_markdown('CSI3_Projet_test_2')
+create_markdown(module)
