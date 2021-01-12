@@ -29,8 +29,8 @@ def CreerTableaux():
 def affiche_module(ordre):#
     for i in range(1,len(readers[0])):
         if(int(readers[0][i][0])==ordre):
-            print(readers[0][i][0])
-            print(readers[0][i][1])
+            #print(readers[0][i][0])
+            #print(readers[0][i][1])
             #writer.writelines(readers[0][i][0]+"\n")
             writer.writelines(readers[0][i][1]+"\n")
             #affiche_chapitre(1)
@@ -84,7 +84,8 @@ def create_markdown(nomModule):
 		colonneOA.append(select[i][3])
 	for chap in listeChap:
 		#print(listeChap)
-		os.mkdir(nomModule, chap)
+		path = os.path.join(nomModule, chap) 
+		os.mkdir(path)
 		colonneOA_Copie = colonneOA
 		
 		##faire le fichier md _index.md 
@@ -92,7 +93,11 @@ def create_markdown(nomModule):
 			lignes_chap = [select[i] for i in find([select[j][1] for j in range(len(select))],chap)]
 			i_min = find([l[3] for l in lignes_chap],min(colonneOA_Copie))[0]
 			nom_activite = lignes_chap[i_min][3]
-			os.mkdir(nomModule + '\\' + chap, nom_activite)
+	
+			print(find([l[3] for l in lignes_chap],min(colonneOA_Copie)))
+			print(nom_activite)
+			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
+			os.mkdir(path)
 			del colonneOA_Copie[i_min]
 
 							
@@ -104,14 +109,11 @@ def create_markdown(nomModule):
 
 
 readers=CreerTableaux()
-affiche_module(1)
-print(readers[0])
+#affiche_module(1)
 
 
 select = choix_selection(choix_module('CSI3_Projet_test_2'))
 
-for x in select:
-	print(x)
 
 #affiche_chapitre(1)
 writer.close()
