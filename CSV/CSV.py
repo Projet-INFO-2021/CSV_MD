@@ -12,15 +12,15 @@ def CreerTableaux():
 	f_module = open("Module_csv.csv", "r")
 	f_structure = open("Structure_csv.csv","r")
 	f_description = open("Description_csv.csv","r")#on ouvre les 3 fichiers csv
-	fichiers = [f_module,f_structure,f_description]#on crÃ©e une liste qui contient en brut les 3 fichiers ouverts
+	fichiers = [f_module,f_structure,f_description]#on crée une liste qui contient en brut les 3 fichiers ouverts
 	readers = []
 	for fichier in fichiers: 
 		reader = csv.reader(fichier)
 		reader = [x[0].strip().split(';') for x in reader]
 		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
 		readers.append(reader) #readers contient des listes contenant les infos des tableaux
-	for x in range (0, len(readers[1])):#on divise la colonne de sÃ©lection du structure
-		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher Ã  chaque fois qu'il est dÃ©lectionÃ©
+	for x in range (0, len(readers[1])):#on divise la colonne de sélection du structure
+		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher à chaque fois qu'il est délectioné
 	return readers
 
 
@@ -67,8 +67,10 @@ def choix_selection(num_module):
 	return selection
 
 def create_markdown(nomModule):
-	path = os.path.join(nomModule) 
-	os.mkdir(path) 
+	if os.path.isfile('\Markdown'):
+		print ("File exist")
+	else:
+		print ("File not exist")
 
 	
 
