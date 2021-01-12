@@ -11,22 +11,22 @@ def find(L,x):
 def CreerTableaux():
 	f_module = open("Module_csv.csv", "r")
 	f_structure = open("Structure_csv.csv","r")
-	f_description = open("Description_csv.csv","r")
-	fichiers = [f_module,f_structure,f_description]
+	f_description = open("Description_csv.csv","r")#on ouvre les 3 fichiers csv
+	fichiers = [f_module,f_structure,f_description]#on crée une liste qui contient en brut les 3 fichiers ouverts
 	readers = []
-	for fichier in fichiers:  #suppression des lignes vides
+	for fichier in fichiers: 
 		reader = csv.reader(fichier)
 		reader = [x[0].strip().split(';') for x in reader]
-		reader = [x for x in reader if x != ['']*len(reader[0])]
+		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
 		readers.append(reader) #readers contient des listes contenant les infos des tableaux
-	for x in range (0, len(readers[1])):
-		readers[1][x][0] = readers[1][x][0].split('.')
+	for x in range (0, len(readers[1])):#on divise la colonne de sélection du structure
+		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher à chaque fois qu'il est délectioné
 	return readers
 
 
 
 
-def affiche_module(ordre):
+def affiche_module(ordre):#
     for i in range(1,len(readers[0])):
         if(int(readers[0][i][0])==ordre):
             print(readers[0][i][0])
@@ -66,6 +66,9 @@ def choix_selection(num_module):
 			selection.append(readers[1][x])
 	return selection
 
+def create_markdown(nomModule):
+	path = os.path.join(nomModule) 
+	os.mkdir(path) 
 
 	
 
@@ -81,5 +84,7 @@ select = choix_selection(choix_module('CSI3_Projet_test_1'))
 for x in select:
 	print(x)
 
-affiche_chapitre(1)
+#affiche_chapitre(1)
 writer.close()
+
+create_markdown('CSI3_Projet_test_1')
