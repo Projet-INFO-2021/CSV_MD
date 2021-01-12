@@ -1,11 +1,11 @@
 Selection;Chapitre;Activite;Ordre_A;Sous_activite;Ordre_SA
 ;;;;;
-1,2;S2_1-Jeu_tests_1;Introduction;1;;0
+1.2;S2_1-Jeu_tests_1;Introduction;1;;0
 ;;;;;
-1,2;S2_1-Jeu_tests_1;Innovations;3;;0
-1,2;S2_1-Jeu_tests_1;Innovations;;Avion;3
-1,2;S2_1-Jeu_tests_1;Innovations;;Ballon;2
-1,2;S2_1-Jeu_tests_1;Innovations;;Bathyscaphe;1
+1.2;S2_1-Jeu_tests_1;Innovations;3;;0
+1.2;S2_1-Jeu_tests_1;Innovations;;Avion;3
+1.2;S2_1-Jeu_tests_1;Innovations;;Ballon;2
+1.2;S2_1-Jeu_tests_1;Innovations;;Bathyscaphe;1
 ;;;;;
 1;S2_1-Jeu_tests_1;La_famille_Piccard;2;;0
 1;S2_1-Jeu_tests_1;La_famille_Piccard;;Auguste_Piccard;1

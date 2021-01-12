@@ -1,5 +1,6 @@
 import csv
 import os
+import shutil
 writer=open('Mark.md','w')
 writer.write('bonjooour\n')
 
@@ -7,20 +8,19 @@ writer.write('bonjooour\n')
 def find(L,x):
 	return [i for i in range(len(L)) if L[i] == x]
 
-
 def CreerTableaux():
 	f_module = open("Module_csv.csv", "r")
 	f_structure = open("Structure_csv.csv","r")
 	f_description = open("Description_csv.csv","r")#on ouvre les 3 fichiers csv
-	fichiers = [f_module,f_structure,f_description]#on crée une liste qui contient en brut les 3 fichiers ouverts
+	fichiers = [f_module,f_structure,f_description]#on crï¿½e une liste qui contient en brut les 3 fichiers ouverts
 	readers = []
 	for fichier in fichiers: 
 		reader = csv.reader(fichier)
 		reader = [x[0].strip().split(';') for x in reader]
 		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
 		readers.append(reader) #readers contient des listes contenant les infos des tableaux
-	for x in range (0, len(readers[1])):#on divise la colonne de sélection du structure
-		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher à chaque fois qu'il est délectioné
+	for x in range (0, len(readers[1])):#on divise la colonne de sï¿½lection du structure
+		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher ï¿½ chaque fois qu'il est dï¿½lectionï¿½
 	return readers
 
 
@@ -58,7 +58,7 @@ def choix_module(nomModule):
 
 
 
-def choix_selection(num_module):
+def choix_selection(num_module):#on rÃ©cupÃ¨re certaines lignes du tableau en fonction du module
 	global readers
 	selection = []
 	for x in range (0, len(readers[1])):		
@@ -67,12 +67,32 @@ def choix_selection(num_module):
 	return selection
 
 def create_markdown(nomModule):
-	if os.path.isfile('\Markdown'):
-		print ("File exist")
-	else:
-		print ("File not exist")
+	if os.path.isdir(nomModule):#Si le dossier Markdown existe on le supprime et on le re-crÃ©e
+		shutil.rmtree(nomModule)
+		os.mkdir(nomModule)
+	else:						#Sinon on le crÃ©e directement
+		os.mkdir(nomModule)
+	global select
+	colonneOA = []
+	listeChap = []
+	for i in range(len(select)):
+		if select[i][1] not in listeChap:
+			listeChap.append(select[i][1])
+		colonneOA.append(select[i][3])
+	for chap in listeChap:
+		os.mkdir(nomModule, chap)
+		colonneOA_Copie = colonneOA
+		##faire le fichier md _index.md 
+		while colonneOA_Copie != []:
+			minOA = min(colonneOA_Copie)
+
+ 
+
+							
+
 
 	
+
 
 
 
