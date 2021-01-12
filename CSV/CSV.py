@@ -47,7 +47,18 @@ def affiche_chapitre(selec_module):
 			writer.writelines(ligne)
 		return
 
-#def affiche_activite():
+
+def affiche_activite(selec_module,chap):
+		selection = choix_selection(selec_module)
+		activite=[]
+		for i in range(0,len(selection)-1):
+			if selection[i][2] not in activite and selection[i][1]==chap:
+				activite.append(selection[i][2])
+		for x in range (len(activite)):
+					ligne=("			"+activite[x]+"\n")
+
+					writer.writelines(ligne)
+		return
 	
 
 
@@ -81,21 +92,22 @@ def create_markdown(nomModule):
 		if select[i][1] not in listeChap:
 			#print(select[i][1])
 			listeChap.append(select[i][1])
-		colonneOA.append(select[i][3])
+
 	for chap in listeChap:
+		for y in range(len(select)):
+			if select[y][3] != '' and select[y][1] == chap: 
+				colonneOA.append(int(select[i][3]))
 		#print(listeChap)
 		path = os.path.join(nomModule, chap) 
 		os.mkdir(path)
 		colonneOA_Copie = colonneOA
 		
-		##faire le fichier md _index.md 
+		##faire le fdp fichier md _index.md 
 		while colonneOA_Copie != []:
 			lignes_chap = [select[i] for i in find([select[j][1] for j in range(len(select))],chap)]
-			i_min = find([l[3] for l in lignes_chap],min(colonneOA_Copie))[0]
-			nom_activite = lignes_chap[i_min][3]
-	
-			print(find([l[3] for l in lignes_chap],min(colonneOA_Copie)))
-			print(nom_activite)
+			i_min = find([l[3] for l in lignes_chap],str(min(colonneOA_Copie)))[0]
+			print(colonneOA_Copie)
+			nom_activite = lignes_chap[i_min][2]
 			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
 			os.mkdir(path)
 			del colonneOA_Copie[i_min]
