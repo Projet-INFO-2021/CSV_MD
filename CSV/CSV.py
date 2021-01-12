@@ -39,14 +39,16 @@ def affiche_module(ordre):#
 def affiche_chapitre(selec_module):
 		selection = choix_selection(selec_module)
 		chapitre=[]
-		for i in range(0,len(selection)):
-			if selection[x][1] not in chapitre:
-				chapitre.append(selection[x][1])
+		for i in range(1,len(selection)-1):
+			if selection[i][1] not in chapitre:
+				chapitre.append(selection[i][1])
 		for x in range (len(chapitre)):
-			ligne=("		"+readers[1][i][1]+"\n")
+			ligne=("		"+chapitre[x]+"\n")
 			writer.writelines(ligne)
 		return
 
+#def affiche_activite():
+	
 
 
 
@@ -77,16 +79,21 @@ def create_markdown(nomModule):
 	listeChap = []
 	for i in range(len(select)):
 		if select[i][1] not in listeChap:
+			#print(select[i][1])
 			listeChap.append(select[i][1])
 		colonneOA.append(select[i][3])
 	for chap in listeChap:
+		#print(listeChap)
 		os.mkdir(nomModule, chap)
 		colonneOA_Copie = colonneOA
+		
 		##faire le fichier md _index.md 
 		while colonneOA_Copie != []:
-			minOA = min(colonneOA_Copie)
-
- 
+			lignes_chap = [select[i] for i in find([select[j][1] for j in range(len(select))],chap)]
+			i_min = find([l[3] for l in lignes_chap],min(colonneOA_Copie))[0]
+			nom_activite = lignes_chap[i_min][3]
+			os.mkdir(nomModule + '\\' + chap, nom_activite)
+			del colonneOA_Copie[i_min]
 
 							
 
@@ -101,7 +108,7 @@ affiche_module(1)
 print(readers[0])
 
 
-select = choix_selection(choix_module('CSI3_Projet_test_1'))
+select = choix_selection(choix_module('CSI3_Projet_test_2'))
 
 for x in select:
 	print(x)
@@ -109,4 +116,4 @@ for x in select:
 #affiche_chapitre(1)
 writer.close()
 
-create_markdown('CSI3_Projet_test_1')
+create_markdown('CSI3_Projet_test_2')
