@@ -2,7 +2,7 @@ import csv
 import os
 import shutil
 writer=open('Mark.md','w')
-writer.write('bonjooour\n')
+writer.write('---\ntitle: Sommaire\ndraft: False\nweight: 8\nmenu: "main"\n---\n\n<html>\n<h1>Sommaire</h1>\n</html>\n\n')
    
 def find(L,x):
 	return [i for i in range(len(L)) if L[i] == x]
@@ -19,7 +19,7 @@ def CreerTableaux():
 		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
 		readers.append(reader) #readers contient des listes contenant les infos des tableaux
 	for x in range (0, len(readers[1])):#on divise la colonne de s�lection du structure
-		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher � chaque fois qu'il est d�lection�
+		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher � chaque fois qu'il est d�selectionn�
 	return readers
 
 def affiche_module(ordre):
@@ -29,30 +29,63 @@ def affiche_module(ordre):
             #print(readers[0][i][1])
             #writer.writelines(readers[0][i][0]+"\n")
             writer.writelines(readers[0][i][1]+"\n")
-            #affiche_chapitre(1)  
+            #affiche_chapitre(1)
 
 def affiche_chapitre(selec_module):
 		selection = choix_selection(selec_module)
 		chapitre=[]
-		for i in range(1,len(selection)-1):
+		for i in range(1,len(selection)):
 			if selection[i][1] not in chapitre:
 				chapitre.append(selection[i][1])
 		for x in range (len(chapitre)):
-			ligne=("		"+chapitre[x]+"\n")
+			ligne=("		- "+chapitre[x]+"\n")
 			writer.writelines(ligne)
+			affiche_activite(selec_module,chapitre[x])
 		return
 
 def affiche_activite(selec_module,chap):
 		selection = choix_selection(selec_module)
 		activite=[]
-		for i in range(0,len(selection)-1):
+		for i in range(0,len(selection)):
 			if selection[i][2] not in activite and selection[i][1]==chap:
 				activite.append(selection[i][2])
 		for x in range (len(activite)):
-					ligne=("			"+activite[x]+"\n")
+					ligne=("			- "+activite[x]+"\n")
 
 					writer.writelines(ligne)
+					
+					affiche_sous_activite(selec_module,chap,activite[x])
+					
+
+					
 		return
+
+def affiche_sous_activite(selec_module,chap,activite):
+		selection = choix_selection(selec_module)
+		sous_activite=[]
+		for i in range(0,len(selection)):
+			
+			if selection[i][2]== activite and selection[i][4] not in sous_activite and selection[i][1]==chap and int(selection[i][5])!=0:
+				sous_activite.append(selection[i][4])
+		for x in range (len(sous_activite)):
+			ligne=("				- "+sous_activite[x]+"\n")
+			writer.writelines(ligne)
+			#affiche_ressource(selec_module,chap,activite,sous_activite[x])
+		return	
+
+
+#def affiche_ressource(module,chap,activite,sous_activite):
+#	selection=choix_selection(selec_module)
+#	ressource=[]
+#	for i in range(0,len(selection)):
+#			if selection[i][2] not in activite and readers[i][2] not in sous_activite and readers2[i][5] not in ressource and selection[i][1]==chap:
+#				ressource.append(readers[i][5])
+#	if sous_activite=='':
+#		ligne=("					- ")
+
+#	return
+
+
 
 def choix_module(nomModule):
 	global readers
@@ -88,10 +121,13 @@ def create_markdown(nomModule):
 	for ligne in select: 
 		if ligne[1] not in listeChap:
 			listeChap.append(ligne[1])
-
+	#Faire _index.md
+	writer.writelines(readers[0][i][1]+"\n")
 	colonneOA = []	
 	for chap in listeChap:
-		for ligne in select:
+		line=("		- "+chapitre[x]+"\n")
+		writer.writelines(line)
+		for ligne in select:		
 			if (ligne[3] != '' and ligne[1] == chap): 
 				colonneOA.append(int(ligne[3]))
 
