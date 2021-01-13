@@ -11,33 +11,39 @@ def CreerTableaux():#renvoie la liste des csv, chacun sous forme de liste de lis
 	f_structure = open("Structure_csv.csv","r")
 	f_description = open("Description_csv.csv","r")#on ouvre les 3 fichiers csv
 	fichiers = [f_module,f_structure,f_description]#on crée une liste qui contient en brut les 3 fichiers ouverts
+
 	readers = []#liste qui va contenir les csv arrangés
+
 	for fichier in fichiers: 
 		reader = csv.reader(fichier)#reader est une liste de singletons de strings
 		reader = [x[0].strip().split(';') for x in reader]#on transforme chaque singleton de longs str (une ligne) en liste de petits str (les cases)
 		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
 		readers.append(reader) #on ajoute le csv sous la forme voulue à la liste
-	for x in range (len(readers[1])):#on divise la colonne de séelection du structure
-		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher a chaque fois qu'il est d�selectionn�
+
+	for x in readers[1]:#arrangement de la premiere colonne de structure
+		x[0] = x[0].split('.')#on transforme '1.2' en ['1','2']
+
 	return readers
 
-def choix_module(nomModule):
+def choix_module(nomModule):#renvoie le numéro correspondant au nom d'un module
 	global readers
-	numero = readers[0][find([L[1] for L in readers[0]],nomModule)[0]][0]
-	return int(numero)
+	noms_modules = [L[1] for L in readers[0]]
+	i_module = find(noms_module,nomModule)[0]
+	numero = readers[0][i_module][0]#le numéro est dans la première colonne
+	return numero
 
-def choix_selection(num_module):#on récupère certaines lignes du tableau en fonction du module
+def choix_selection(num_module):#on renvoie les lignes du tableau qui correspondent au module
 	global readers
 	selection = []
-	for ligne in readers[1]:	
-		if str(num_module) in ligne[0]:
+	for ligne in readers[1]:
+		if num_module in ligne[0]:#si la ligne fait partie du module
 			selection.append(ligne)
 	return selection
 
-def liste_SA(nom_activite):
+def liste_SA(nom_activite):#renvoie les lignes de description liées à une activité
 	global readers
 	selectionSA = []
-	for ligne in readers[2]:		
+	for ligne in readers[2]:
 		if nom_activite == ligne[1]:
 			selectionSA.append(ligne)
 	return selectionSA
@@ -52,22 +58,28 @@ def create_markdown(nomModule):
 		os.mkdir(nomModule)
 	writer=open(nomModule +'/'+'_index.md','w')
 	writer.write('---\ntitle: '+ nomModule + '\ndraft: False\nmenu: "main"\n---\n\n<html>\n<h1>'+ nomModule + '</h1>\n</html>\n\n')
-	global select
-	listeChap = []
-	for ligne in select: 
+
+	select = choix_selection(choix_module(nomModule))#on récupère toutes les lignes de structure correspondant au module
+
+	listeChap = []#liste des str des chapitres
+	for ligne in select:
 		if ligne[1] not in listeChap:
 			listeChap.append(ligne[1])
-	#Faire _index.md
-	colonneOA = []	
+	
 	for chap in listeChap:
 		line=("- " + chap+ "\n")
 		writer.writelines(line)
+
+		path = os.path.join(nomModule, chap) 
+		os.mkdir(path)
+
+		colonneOA = []#liste des ordres d'activité
 		for ligne in select:		
 			if (ligne[3] != '' and ligne[1] == chap): 
 				colonneOA.append(int(ligne[3]))
 
-		path = os.path.join(nomModule, chap) 
-		os.mkdir(path)
+		
+
 		colonneOA_Copie = colonneOA		
 	
 		lignes_chap = [select[i] for i in find([l[1] for l in select],chap)]
@@ -132,16 +144,11 @@ def create_markdown(nomModule):
 			#faire le fichier md _index.md
 
 
-
-writer = ''
-
-Ressources = 'Ressources'
-module = 'CSI3_Projet_test_1'
-readers=CreerTableaux()
-select = choix_selection(choix_module(module))
-selectSA = liste_SA('Innovations')
-
-create_markdown(module)
-writer.close()
-
-print('done')
+def CSV(nomModule):
+	module = nomModule
+	module = 'CSI3_Projet_test_1'
+	readers=CreerTableaux()
+	select = choix_selection(choix_module(module))
+	selectSA = liste_SA('Innovations')
+	create_markdown(module)
+	writer.close()
