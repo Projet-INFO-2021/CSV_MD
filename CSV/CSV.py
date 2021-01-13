@@ -1,91 +1,25 @@
 import csv
 import os
 import shutil
-writer=open('Mark.md','w')
-writer.write('---\ntitle: Sommaire\ndraft: False\nweight: 8\nmenu: "main"\n---\n\n<html>\n<h1>Sommaire</h1>\n</html>\n\n')
+
    
-def find(L,x):
+def find(L,x):#renvoie la liste des indices i tels que L[i] == x
 	return [i for i in range(len(L)) if L[i] == x]
 
-def CreerTableaux():
+def CreerTableaux():#renvoie la liste des csv, chacun sous forme de liste de listes
 	f_module = open("Module_csv.csv", "r")
 	f_structure = open("Structure_csv.csv","r")
 	f_description = open("Description_csv.csv","r")#on ouvre les 3 fichiers csv
-	fichiers = [f_module,f_structure,f_description]#on cr�e une liste qui contient en brut les 3 fichiers ouverts
-	readers = []
+	fichiers = [f_module,f_structure,f_description]#on crée une liste qui contient en brut les 3 fichiers ouverts
+	readers = []#liste qui va contenir les csv arrangés
 	for fichier in fichiers: 
-		reader = csv.reader(fichier)
-		reader = [x[0].strip().split(';') for x in reader]
+		reader = csv.reader(fichier)#reader est une liste de singletons de strings
+		reader = [x[0].strip().split(';') for x in reader]#on transforme chaque singleton de longs str (une ligne) en liste de petits str (les cases)
 		reader = [x for x in reader if x != ['']*len(reader[0])] #suppression des lignes vides
-		readers.append(reader) #readers contient des listes contenant les infos des tableaux
-	for x in range (0, len(readers[1])):#on divise la colonne de s�lection du structure
-		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher � chaque fois qu'il est d�selectionn�
+		readers.append(reader) #on ajoute le csv sous la forme voulue à la liste
+	for x in range (len(readers[1])):#on divise la colonne de séelection du structure
+		readers[1][x][0] = readers[1][x][0].split('.')#pour l'afficher a chaque fois qu'il est d�selectionn�
 	return readers
-
-def affiche_module(ordre):
-    for i in range(1,len(readers[0])):
-        if(int(readers[0][i][0])==ordre):
-            #print(readers[0][i][0])
-            #print(readers[0][i][1])
-            #writer.writelines(readers[0][i][0]+"\n")
-            writer.writelines(readers[0][i][1]+"\n")
-            #affiche_chapitre(1)
-
-def affiche_chapitre(selec_module):
-		selection = choix_selection(selec_module)
-		chapitre=[]
-		for i in range(1,len(selection)):
-			if selection[i][1] not in chapitre:
-				chapitre.append(selection[i][1])
-		for x in range (len(chapitre)):
-			ligne=("		- "+chapitre[x]+"\n")
-			writer.writelines(ligne)
-			affiche_activite(selec_module,chapitre[x])
-		return
-
-def affiche_activite(selec_module,chap):
-		selection = choix_selection(selec_module)
-		activite=[]
-		for i in range(0,len(selection)):
-			if selection[i][2] not in activite and selection[i][1]==chap:
-				activite.append(selection[i][2])
-		for x in range (len(activite)):
-					ligne=("			- "+activite[x]+"\n")
-
-					writer.writelines(ligne)
-					
-					affiche_sous_activite(selec_module,chap,activite[x])
-					
-
-					
-		return
-
-def affiche_sous_activite(selec_module,chap,activite):
-		selection = choix_selection(selec_module)
-		sous_activite=[]
-		for i in range(0,len(selection)):
-			
-			if selection[i][2]== activite and selection[i][4] not in sous_activite and selection[i][1]==chap and int(selection[i][5])!=0:
-				sous_activite.append(selection[i][4])
-		for x in range (len(sous_activite)):
-			ligne=("				- "+sous_activite[x]+"\n")
-			writer.writelines(ligne)
-			#affiche_ressource(selec_module,chap,activite,sous_activite[x])
-		return	
-
-
-#def affiche_ressource(module,chap,activite,sous_activite):
-#	selection=choix_selection(selec_module)
-#	ressource=[]
-#	for i in range(0,len(selection)):
-#			if selection[i][2] not in activite and readers[i][2] not in sous_activite and readers2[i][5] not in ressource and selection[i][1]==chap:
-#				ressource.append(readers[i][5])
-#	if sous_activite=='':
-#		ligne=("					- ")
-
-#	return
-
-
 
 def choix_module(nomModule):
 	global readers
@@ -109,23 +43,24 @@ def liste_SA(nom_activite):
 	return selectionSA
 
 def create_markdown(nomModule):
+	global writer
 	MDnom = 'MD_' + nomModule
 	if os.path.isdir(nomModule):#Si le dossier Markdown existe on le supprime et on le re-crée
 		shutil.rmtree(nomModule)
 		os.mkdir(nomModule)
 	else:						#Sinon on le crée directement
 		os.mkdir(nomModule)
-
+	writer=open(nomModule +'/'+'_index.md','w')
+	writer.write('---\ntitle: '+ nomModule + '\ndraft: False\nmenu: "main"\n---\n\n<html>\n<h1>'+ nomModule + '</h1>\n</html>\n\n')
 	global select
 	listeChap = []
 	for ligne in select: 
 		if ligne[1] not in listeChap:
 			listeChap.append(ligne[1])
 	#Faire _index.md
-	writer.writelines(readers[0][i][1]+"\n")
 	colonneOA = []	
 	for chap in listeChap:
-		line=("		- "+chapitre[x]+"\n")
+		line=("- " + chap+ "\n")
 		writer.writelines(line)
 		for ligne in select:		
 			if (ligne[3] != '' and ligne[1] == chap): 
@@ -141,6 +76,8 @@ def create_markdown(nomModule):
 		while colonneOA_Copie != []:
 			i_minOA = find([l[3] for l in lignes_chap],str(min(colonneOA_Copie)))[0]
 			nom_activite = lignes_chap[i_minOA][2]
+			line=("	- "+nom_activite+"\n")
+			writer.writelines(line)
 			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
 			os.mkdir(path)
 			lignes_activite = [lignes_chap[i] for i in find([l[2] for l in lignes_chap],nom_activite)]
@@ -161,41 +98,50 @@ def create_markdown(nomModule):
 					if lignes_SA != []:
 						if lignes_SA[0][4]=='_':
 						#creer fichier md
+							line=("		- ["+lignes_SA[0][5]+"]("+'/'+nomModule+'/'+chap+'/'+nom_activite+'/'+lignes_SA[0][5]+')\n')
+							writer.writelines(line)#ajoute une ressource
 							shutil.copy2(Ressources+'\\'+chap + '\\'+nom_activite+'\\'+lignes_SA[0][5],nomModule+'\\'+chap+'\\'+nom_activite)
 						else:
 							while colonneOR_Copie != []:
 								i_minOR = find(colonneOR,min(colonneOR_Copie))[0]
+								line=("		- ["+lignes_SA[i_minOR][5]+"](/"+nomModule+'/'+chap+'/'+nom_activite+'/'+lignes_SA[i_minOR][5]+')\n')
+								writer.writelines(line)#ajoute une ressource
 								shutil.copy2(Ressources + '\\' + chap + '\\'+nom_activite+'\\'+lignes_SA[i_minOR][5],nomModule+'\\'+chap+'\\'+nom_activite)
 								colonneOR_Copie.remove(min(colonneOR_Copie))
 						
 					#copier directement + md
 				else:
+					line=("		- "+nom_sous_activite+"\n")
+					writer.writelines(line)
 					path = os.path.join(nomModule + '\\' + chap +'\\'+ nom_activite,nom_sous_activite) 
 					os.mkdir(path)
 					if lignes_SA[0][4]=='_':
 						#creer fichier md
+						line=("			- ["+lignes_SA[0][5]+"]"+'(/'+nomModule+'/'+chap+'/'+nom_activite+'/'+nom_sous_activite+'/'+lignes_SA[0][5]+')\n')
+						writer.writelines(line)#ajoute une ressource
 						shutil.copy2(Ressources+'\\'+chap + '\\'+nom_activite+'\\'+nom_sous_activite+'\\'+lignes_SA[0][5],nomModule+'\\'+chap+'\\'+nom_activite+'\\'+nom_sous_activite)
 					else:
 						while colonneOR_Copie != []:
 							i_minOR = find(colonneOR,min(colonneOR_Copie))[0]
+							line=("			- ["+lignes_SA[i_minOR][5]+"](/"+nomModule+'/'+chap+'/'+nom_activite+'/'+nom_sous_activite+'/'+lignes_SA[i_minOR][5]+')\n')
+							writer.writelines(line)#ajoute un ressource
 							shutil.copy2(Ressources + '\\' + chap + '\\'+nom_activite+'\\'+nom_sous_activite+'\\'+lignes_SA[i_minOR][5],nomModule+'\\'+chap+'\\'+nom_activite+'\\'+nom_sous_activite)
 							colonneOR_Copie.remove(min(colonneOR_Copie))
 				colonneOSA_Copie.remove(min(colonneOSA_Copie))
 			colonneOA_Copie.remove(min(colonneOA_Copie))
 			#faire le fichier md _index.md
 
+
+
+writer = ''
+
 Ressources = 'Ressources'
-
-module = 'CSI3_Projet_test_2'
+module = 'CSI3_Projet_test_1'
 readers=CreerTableaux()
-#affiche_module(1)
-
 select = choix_selection(choix_module(module))
 selectSA = liste_SA('Innovations')
 
-#affiche_chapitre(1)
-writer.close()
-
 create_markdown(module)
+writer.close()
 
 print('done')
