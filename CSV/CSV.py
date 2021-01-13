@@ -81,12 +81,7 @@ def create_markdown(nomModule):
 		shutil.rmtree(nomModule)
 		os.mkdir(nomModule)
 	else:						#Sinon on le crée directement
-		os.mkdir(MDnom)
-	if os.path.isdir(MDnom):#Si le dossier Markdown existe on le supprime et on le re-crée
-		shutil.rmtree(MDnom)
-		os.mkdir(MDnom)
-	else:						#Sinon on le crée directement
-		os.mkdir(MDnom)
+		os.mkdir(nomModule)
 
 	global select
 	listeChap = []
@@ -102,8 +97,6 @@ def create_markdown(nomModule):
 
 		path = os.path.join(nomModule, chap) 
 		os.mkdir(path)
-		path = os.path.join(MDnom, chap) 
-		os.mkdir(path)
 		colonneOA_Copie = colonneOA		
 	
 		lignes_chap = [select[i] for i in find([l[1] for l in select],chap)]
@@ -113,8 +106,6 @@ def create_markdown(nomModule):
 			i_minOA = find([l[3] for l in lignes_chap],str(min(colonneOA_Copie)))[0]
 			nom_activite = lignes_chap[i_minOA][2]
 			path = os.path.join(nomModule + '\\' + chap, nom_activite) 
-			os.mkdir(path)
-			path = os.path.join(MDnom + '\\' + chap, nom_activite) 
 			os.mkdir(path)
 			lignes_activite = [lignes_chap[i] for i in find([l[2] for l in lignes_chap],nom_activite)]
 			colonneOSA = [int(ligne[5]) for ligne in lignes_activite]
@@ -145,8 +136,6 @@ def create_markdown(nomModule):
 				else:
 					path = os.path.join(nomModule + '\\' + chap +'\\'+ nom_activite,nom_sous_activite) 
 					os.mkdir(path)
-					path = os.path.join(MDnom + '\\' + chap +'\\'+ nom_activite,nom_sous_activite) 
-					os.mkdir(path)
 					if lignes_SA[0][4]=='_':
 						#creer fichier md
 						shutil.copy2(Ressources+'\\'+chap + '\\'+nom_activite+'\\'+nom_sous_activite+'\\'+lignes_SA[0][5],nomModule+'\\'+chap+'\\'+nom_activite+'\\'+nom_sous_activite)
@@ -161,7 +150,7 @@ def create_markdown(nomModule):
 
 Ressources = 'Ressources'
 
-module = 'CSI3_Projet_test_1'
+module = 'CSI3_Projet_test_2'
 readers=CreerTableaux()
 #affiche_module(1)
 
